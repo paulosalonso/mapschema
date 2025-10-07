@@ -1,7 +1,5 @@
 package com.github.paulosalonso.mapschema;
 
-import com.github.paulosalonso.mapschema.MapSchemaEntryList.EntryFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.function.Function;
 
 public class MapSchemaRoot extends HashMap<String, Object> implements MapSchema {
 
-    protected final MapSchema root = new MapSchemaEntry(this);
+    final MapSchema root = new MapSchemaEntry(this);
 
     @Override
     public MapSchema getParent() {
@@ -58,23 +56,18 @@ public class MapSchemaRoot extends HashMap<String, Object> implements MapSchema 
     }
 
     @Override
-    public <T extends MapSchema> void set(String key, MapSchemaEntryList<T> mapSchemaEntryList) {
-        root.set(key, mapSchemaEntryList);
+    public <RAW, T> void set(String key, MapSchemaList<RAW, T> mapSchemaList) {
+        root.set(key, mapSchemaList);
     }
 
     @Override
-    public <T extends MapSchema> MapSchemaEntryList<T> getEntryList(String key, EntryFactory<T> entryFactory) {
-        return root.getEntryList(key, entryFactory);
+    public <RAW, T> MapSchemaList<RAW, T> getList(String key) {
+        return root.getList(key);
     }
 
     @Override
-    public <RAW, T> MapSchemaRawList<RAW, T> getRawList(String key) {
-        return root.getRawList(key);
-    }
-
-    @Override
-    public <RAW, T> MapSchemaRawList<RAW, T> getRawList(String key, Function<T, RAW> inputConverter, Function<RAW, T> outputConverter) {
-        return root.getRawList(key, inputConverter, outputConverter);
+    public <RAW, T> MapSchemaList<RAW, T> getList(String key, Function<T, RAW> inputConverter, Function<RAW, T> outputConverter) {
+        return root.getList(key, inputConverter, outputConverter);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.github.paulosalonso.mapschema;
 
-import com.github.paulosalonso.mapschema.MapSchemaEntryList.EntryFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -26,14 +24,12 @@ public interface MapSchema {
 
     void set(String key, MapSchema mapSchema);
 
-    <T extends MapSchema> void set(String key, MapSchemaEntryList<T> mapSchemaEntryList);
+    <RAW, T> void set(String key, MapSchemaList<RAW, T> mapSchemaList);
 
-    <T extends MapSchema> MapSchemaEntryList<T> getEntryList(String key, EntryFactory<T> entryFactory);
+    <RAW, T> MapSchemaList<RAW, T> getList(String key);
 
-    <RAW, T> MapSchemaRawList<RAW, T> getRawList(String key);
-
-    <RAW, T> MapSchemaRawList<RAW, T> getRawList(String key, 
-        Function<T, RAW> inputConverter, Function<RAW, T> outputConverter);
+    <RAW, T> MapSchemaList<RAW, T> getList(String key,
+            Function<T, RAW> inputConverter, Function<RAW, T> outputConverter);
 
     <T> T computeIfAbsent(String key, Function<String, T> mappingFunction);
 

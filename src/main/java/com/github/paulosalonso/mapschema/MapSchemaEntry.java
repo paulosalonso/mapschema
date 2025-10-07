@@ -1,6 +1,5 @@
 package com.github.paulosalonso.mapschema;
 
-import com.github.paulosalonso.mapschema.MapSchemaEntryList.EntryFactory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +12,12 @@ import java.util.function.Function;
 public class MapSchemaEntry implements MapSchema {
 
     @Getter
-    protected MapSchema parent;
+    MapSchema parent;
 
-    protected String key;
+    String key;
 
     @Getter @Setter
-    protected Map<String, Object> source;
+    Map<String, Object> source;
 
     /**
      * Default constructor
@@ -128,34 +127,29 @@ public class MapSchemaEntry implements MapSchema {
         }
     }
 
-    public <T extends MapSchema> void set(String key, MapSchemaEntryList<T> mapSchemaEntryList) {
+    @Override
+    public <RAW, T> void set(String key, MapSchemaList<RAW, T> mapSchemaList) {
         checkNotNull(key, "key");
 
-        if (mapSchemaEntryList == null) {
+        if (mapSchemaList == null) {
             this.source.put(key, null);
         } else {
-            this.source.put(key, mapSchemaEntryList.getSources());
+            this.source.put(key, mapSchemaList.getSource());
         }
     }
 
     @Override
-    public <T extends MapSchema> MapSchemaEntryList<T> getEntryList(String key, EntryFactory<T> entryFactory) {
+    public <RAW, T> MapSchemaList<RAW, T> getList(String key) {
         checkNotNull(key, "key");
-        return MapSchemaEntryList.createKeepingSourceValues(this, key, entryFactory);
+        return new MapSchemaList<>(this, key);
     }
 
     @Override
-    public <RAW, T> MapSchemaRawList<RAW, T> getRawList(String key) {
-        checkNotNull(key, "key");
-        return new MapSchemaRawList<>(this, key);
-    }
-
-    @Override
-    public <RAW, T> MapSchemaRawList<RAW, T> getRawList(String key,
+    public <RAW, T> MapSchemaList<RAW, T> getList(String key,
             Function<T, RAW> inputConverter, Function<RAW, T> outputConverter) {
 
         checkNotNull(key, "key");
-        return new MapSchemaRawList<>(this, key, inputConverter, outputConverter);
+        return new MapSchemaList<>(this, key, inputConverter, outputConverter);
     }
 
     @Override

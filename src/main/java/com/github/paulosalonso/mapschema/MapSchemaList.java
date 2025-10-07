@@ -1,26 +1,50 @@
 package com.github.paulosalonso.mapschema;
 
+import lombok.Getter;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class MapSchemaRawList<RAW, T> implements List<T> {
+public class MapSchemaList<RAW, T> implements List<T> {
 
-    protected final List<RAW> source;
-    protected final Function<T, RAW> inputConverter;
-    protected final Function<RAW, T> outputConverter;
+    @Getter
+    final List<RAW> source;
+    final Function<T, RAW> inputConverter;
+    final Function<RAW, T> outputConverter;
 
-    public MapSchemaRawList(MapSchema parent, String key) {
+    public MapSchemaList() {
+        this.source = new ArrayList<>();
+        this.inputConverter = null;
+        this.outputConverter = null;
+    }
+
+    public MapSchemaList(Function<T, RAW> inputConverter, Function<RAW, T> outputConverter) {
+        this.source = new ArrayList<>();
+        this.inputConverter = inputConverter;
+        this.outputConverter = outputConverter;
+    }
+
+    public MapSchemaList(List<RAW> source) {
+        this.source = source;
+        this.inputConverter = null;
+        this.outputConverter = null;
+    }
+
+    public MapSchemaList(List<RAW> source, Function<T, RAW> inputConverter, Function<RAW, T> outputConverter) {
+        this.source = source;
+        this.inputConverter = inputConverter;
+        this.outputConverter = outputConverter;
+    }
+
+    public MapSchemaList(MapSchema parent, String key) {
         this.source = parent.computeIfAbsent(key, k -> new ArrayList<>());
         this.inputConverter = null;
         this.outputConverter = null;
     }
 
-    public MapSchemaRawList(MapSchema parent, String key,
-                            Function<T, RAW> inputConverter,
-                            Function<RAW, T> outputConverter) {
-
+    public MapSchemaList(MapSchema parent, String key, Function<T, RAW> inputConverter, Function<RAW, T> outputConverter) {
         this.source = parent.computeIfAbsent(key, k -> new ArrayList<>());
         this.inputConverter = inputConverter;
         this.outputConverter = outputConverter;

@@ -2,9 +2,10 @@ package com.github.paulosalonso.mapschema.example;
 
 import com.github.paulosalonso.mapschema.MapSchema;
 import com.github.paulosalonso.mapschema.MapSchemaEntry;
-import com.github.paulosalonso.mapschema.MapSchemaEntryList;
+import com.github.paulosalonso.mapschema.MapSchemaList;
 import com.github.paulosalonso.mapschema.MapSchemaRoot;
 import com.github.paulosalonso.mapschema.converter.LocalDateConverter;
+import com.github.paulosalonso.mapschema.converter.MapSchemaConverter;
 import com.github.paulosalonso.mapschema.converter.UuidConverter;
 
 import java.time.LocalDate;
@@ -49,36 +50,38 @@ public class Example {
             setDescricao("Objeto complexo inserido posteriormente");
         }});
 
-        System.out.println("Setando entry");
-        System.out.println(ROOT);
-        System.out.println();
-
-        ROOT.setEntryList(MapSchemaEntryList
-                .createResetingSourceValues(ROOT, "entryList", EntryExample::new));
-
-        System.out.println("Setando entryList removendo os itens existentes");
+        System.out.println("entry atribuído");
         System.out.println(ROOT);
         System.out.println();
 
         ROOT.getEntryList().add(new EntryExample() {{
             setId(UUID.randomUUID());
-            setDescricao("Item inserido posteriormente na lista de objetos complexos");
+            setDescricao("Item inserido na lista de objetos complexos");
         }});
 
-        System.out.println("Incluindo entry em entryList");
+        System.out.println("Item adicionado em entryList");
         System.out.println(ROOT);
         System.out.println();
 
-        ROOT.setEntryList(MapSchemaEntryList
-                .createKeepingSourceValues(ROOT, "entryList", EntryExample::new));
+        ROOT.setEntryList(new MapSchemaList<>(
+                MapSchemaConverter::toSource, MapSchemaConverter.toMapSchema(EntryExample::new)));
 
-        System.out.println("Setando entryList mantendo os itens existentes");
+        System.out.println("entryList substituída");
+        System.out.println(ROOT);
+        System.out.println();
+
+        ROOT.getEntryList().add(new EntryExample() {{
+            setId(UUID.randomUUID());
+            setDescricao("Item inserido após substituição da lista de objetos complexos");
+        }});
+
+        System.out.println("Item adicionado em entryList");
         System.out.println(ROOT);
         System.out.println();
 
         ROOT.getRawList().add(LocalDate.now());
 
-        System.out.println("Incluindo item em rawList");
+        System.out.println("Item adicionado em rawList");
         System.out.println(ROOT);
     }
 
@@ -119,20 +122,21 @@ public class Example {
 
         public List<EntryExample> getEntryList() {
             if (entryList == null) {
-                entryList = super.getEntryList("entryList", EntryExample::new);
+                entryList = super.getList("entryList",
+                        MapSchemaConverter::toSource, MapSchemaConverter.toMapSchema(EntryExample::new));
             }
 
             return entryList;
         }
 
-        public void setEntryList(MapSchemaEntryList<EntryExample> entryList) {
+        public void setEntryList(MapSchemaList<Map<String, Object>, EntryExample> entryList) {
             super.set("entryList", entryList);
             this.entryList = entryList;
         }
 
         public List<LocalDate> getRawList() {
             if (rawList == null) {
-                rawList = super.getRawList("rawList", LocalDateConverter::toString, LocalDateConverter::fromString);
+                rawList = super.getList("rawList", LocalDateConverter::toString, LocalDateConverter::fromString);
             }
 
             return rawList;
