@@ -27,7 +27,7 @@ public class MapSchemaRoot extends HashMap<String, Object> implements MapSchema 
 
     @Override
     public void setSource(Map<String, Object> source) {
-        throw new UnsupportedOperationException("MapSchemaRoot has no parent");
+        throw new UnsupportedOperationException("MapSchemaRoot has no source, it is the source by itself.");
     }
 
     @Override

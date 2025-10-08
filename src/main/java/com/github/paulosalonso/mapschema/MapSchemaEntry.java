@@ -19,18 +19,10 @@ public class MapSchemaEntry implements MapSchema {
     @Getter @Setter
     Map<String, Object> source;
 
-    /**
-     * Default constructor
-     */
     public MapSchemaEntry() {
         this.source = new HashMap<>();
     }
 
-    /**
-     * Constructor for root instances
-     *
-     * @param source Map that represents the root source of data
-     */
     public MapSchemaEntry(Map<String, Object> source) {
         checkNotNull(source, "source");
         this.parent = null;
@@ -38,12 +30,6 @@ public class MapSchemaEntry implements MapSchema {
         this.source = source;
     }
 
-    /**
-     * Constructor for child instances
-     *
-     * @param parent Instance that contains the key that represents this child
-     * @param key Key in the parent that represents the source data of this child
-     */
     public MapSchemaEntry(MapSchema parent, String key) {
         checkNotNull(parent, "parent");
         checkNotNull(key, "key");
@@ -53,13 +39,6 @@ public class MapSchemaEntry implements MapSchema {
         this.source = parent.computeIfAbsent(key, k -> new HashMap<>());
     }
 
-    /**
-     * Constructor for child instances that will be on a list
-     *
-     * @param parent Instance that contains the key that represents this list of children
-     * @param key Key in the parent that represents the source data of this list of children
-     * @param source Map that represents the source of data of this child
-     */
     public MapSchemaEntry(MapSchema parent, String key, Map<String, Object> source) {
         checkNotNull(parent, "parent");
         checkNotNull(key, "key");
