@@ -72,7 +72,7 @@ public class PerformanceTest {
         private String descricao;
         private Entry entry;
         private List<Entry> entryList;
-        private List<LocalDate> convertedRawList;
+        private List<LocalDate> convertedList;
         private List<String> rawList;
     }
 

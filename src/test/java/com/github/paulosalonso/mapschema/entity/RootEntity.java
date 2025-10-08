@@ -63,7 +63,7 @@ public class RootEntity extends MapSchemaRoot {
 
     public List<LocalDate> getConvertedList() {
         if (convertedList == null) {
-            convertedList = super.getList("convertedRawList",
+            convertedList = super.getList("convertedList",
                     LocalDateConverter::toString, LocalDateConverter::fromString);
         }
 
@@ -71,7 +71,7 @@ public class RootEntity extends MapSchemaRoot {
     }
 
     public void setConvertedList(MapSchemaList<String, LocalDate> convertedList) {
-        super.set("convertedRawList", convertedList);
+        super.set("convertedList", convertedList);
         this.convertedList = convertedList;
     }
 
