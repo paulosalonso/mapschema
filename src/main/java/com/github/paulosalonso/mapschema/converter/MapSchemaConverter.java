@@ -15,7 +15,7 @@ public class MapSchemaConverter {
         return mapSchema.getSource();
     }
 
-    public static <T extends MapSchema> Function<Map<String, Object>, T> toMapSchema(Function<Map<String, Object>, T> factory) {
-        return CachedConverter.withFactory(factory)::convert;
+    public static <T extends MapSchema> Function<Map<String, Object>, T> toMapSchema(Function<Map<String, Object>, T> converter) {
+        return CachedConverter.withConverter(converter)::convert;
     }
 }

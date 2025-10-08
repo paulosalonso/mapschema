@@ -13,14 +13,14 @@ public class CachedConverter<INPUT, OUTPUT> {
 
     private final Map<INPUT, OUTPUT> CACHE = new IdentityHashMap<>();
 
-    private final Function<INPUT, OUTPUT> factory;
+    private final Function<INPUT, OUTPUT> converter;
 
-    public static <INPUT, OUTPUT> CachedConverter<INPUT, OUTPUT> withFactory(Function<INPUT, OUTPUT> factory) {
-        return new CachedConverter<>(factory);
+    public static <INPUT, OUTPUT> CachedConverter<INPUT, OUTPUT> withConverter(Function<INPUT, OUTPUT> converter) {
+        return new CachedConverter<>(converter);
     }
 
     public OUTPUT convert(INPUT source) {
-        return CACHE.computeIfAbsent(source, factory);
+        return CACHE.computeIfAbsent(source, converter);
     }
 
 }
